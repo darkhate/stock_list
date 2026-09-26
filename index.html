@@ -3,90 +3,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+
   <title>市場即時監控</title>
 
   <style>
+    :root {
+      color-scheme: dark;
+
+      --tv-widget-background-color: #0f172a;
+      --tv-widget-text-color: #e5e7eb;
+      --tv-widget-font-family: Arial, "Noto Sans TC", sans-serif;
+
+      --tv-widget-positive-color: #22c55e;
+      --tv-widget-negative-color: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      background: #111827;
-      color: white;
-      font-family: Arial, sans-serif;
+      background: #020617;
+      color: #f8fafc;
+      font-family: Arial, "Noto Sans TC", sans-serif;
     }
 
     .container {
-      width: 95%;
-      max-width: 1400px;
-      margin: 30px auto;
+      width: min(96%, 1600px);
+      margin: 24px auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .contract-tag {
+      padding: 7px 10px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #cbd5e1;
+      background: #0f172a;
+      font-size: 13px;
+      white-space: nowrap;
     }
 
     .market-box {
-      background: #18181b;
-      border: 1px solid #2d3748;
-      border-radius: 12px;
+      width: 100%;
+      min-height: 760px;
       overflow: hidden;
-      min-height: 700px;
+
+      border: 1px solid #334155;
+      border-radius: 12px;
+
+      background: #0f172a;
+
+      box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    tv-market-data {
+      display: block;
+      width: 100%;
+      min-height: 760px;
+    }
+
+    .loading {
+      padding: 24px;
+      color: #94a3b8;
+    }
+
+    .notice {
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 720px) {
+
+      .container {
+        width: 100%;
+        margin: 0;
+      }
+
+      .header {
+        padding: 16px;
+        margin-bottom: 0;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .market-box {
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+      }
+
+      .notice {
+        padding: 0 16px 16px;
+      }
     }
   </style>
 </head>
 
+
 <body>
 
-<div class="container">
+  <main class="container">
 
-  <h1>市場即時監控</h1>
+    <header class="header">
 
-  <div class="market-box">
+      <div>
 
-    <script
-      type="module"
-      src="https://widgets.tradingview-widget.com/w/en/tv-market-data.js">
-    </script>
+        <h1>
+          市場即時監控
+        </h1>
 
-    <tv-market-data
-      symbol-sectors='[
-        {
-          "sectionName":"ETF",
-          "symbols":[
-            "NASDAQ:QQQ",
-            "AMEX:VOO",
-            "AMEX:TMF",
-            "NASDAQ:TLT"
-          ]
-        },
-        {
-          "sectionName":"貴金屬",
-          "symbols":[
-            "OANDA:XAGUSD",
-            "COMEX:GC1!"
-          ]
-        },
-        {
-          "sectionName":"期貨",
-          "symbols":[
-            "CME:BTC1!",
-            "NYMEX:CL1!",
-            "CME_MINI:NQ1!",
-            "CME_MINI:ES1!"
-          ]
-        },
-        {
-          "sectionName":"總經",
-          "symbols":[
-            "CBOE:VIX",
-            "TVC:DXY",
-            "TVC:US10Y"
-          ]
-        }
-      ]'>
-    </tv-market-data>
+        <p class="subtitle">
+          ETF、貴金屬、期貨與總經指標
+          ｜期貨採目前指定月份合約
+        </p>
 
-  </div>
+      </div>
 
-</div>
+
+      <div class="contract-tag">
+        期貨月份基準：2026-09-26
+      </div>
+
+    </header>
+
+
+
+    <section class="market-box">
+
+      <!-- TradingView Market Data Widget -->
+
+      <script
+        type="module"
+        src="https://widgets.tradingview-widget.com/w/en/tv-market-data.js">
+      </script>
+
+
+      <tv-market-data
+        theme="dark"
+        transparent
+
+        symbol-sectors='[
+
+          {
+            "sectionName":"ETF",
+
+            "symbols":[
+
+              "NASDAQ:QQQ",
+
+              "AMEX:VOO",
+
+              "AMEX:TMF",
+
+              "NASDAQ:TLT"
+
+            ]
+          },
+
+
+          {
+            "sectionName":"貴金屬 / 黃金期貨",
+
+            "symbols":[
+
+              "OANDA:XAGUSD",
+
+              "COMEX:GCZ2026"
+
+            ]
+          },
+
+
+          {
+            "sectionName":"期貨",
+
+            "symbols":[
+
+              "CME:BTCV2026",
+
+              "NYMEX:CLX2026",
+
+              "CME_MINI:NQZ2026",
+
+              "CME_MINI:ESZ2026",
+
+              "CME_MINI:MESZ2026"
+
+            ]
+          },
+
+
+          {
+            "sectionName":"總經",
+
+            "symbols":[
+
+              "CBOE:VIX",
+
+              "TVC:DXY",
+
+              "TVC:US10Y"
+
+            ]
+          }
+
+        ]'>
+
+
+        <div class="loading">
+
+          正在載入市場資料…
+
+        </div>
+
+
+      </tv-market-data>
+
+    </section>
+
+
+
+    <p class="notice">
+
+      注意：
+      部分 CME／COMEX／NYMEX 商品，
+      可能因 TradingView 網站小工具的交易所行情授權限制，
+      顯示 Permission denied。
+
+      這種情況不是 HTML 語法錯誤。
+
+    </p>
+
+
+  </main>
 
 </body>
 </html>
