@@ -127,6 +127,25 @@
       padding: 10px 8px;
     }
 
+    /* 每個分類下方都重複一次欄位名稱，避免往下看時不知道每欄代表什麼 */
+    .section-header td {
+      background: #0f172a;
+      color: #8fa5c8;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 9px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+    }
+
+    .section-header td.left {
+      text-align: left;
+    }
+
+    .section-header .seq {
+      text-align: center !important;
+    }
+
     .row:hover td {
       background: rgba(255,255,255,.025);
     }
@@ -402,6 +421,25 @@
       return item?.[apiKey];
     }
 
+    function sectionHeaderRow() {
+      return `
+        <tr class="section-header">
+          <td class="seq">序號</td>
+          <td class="left code">代碼</td>
+          <td class="left name">名稱 / 目前合約</td>
+          <td class="price-col">最新價</td>
+          <td class="change-col">漲跌額</td>
+          <td class="percent-col">漲跌幅</td>
+          <td class="number-col">開盤</td>
+          <td class="number-col">最高</td>
+          <td class="number-col">最低</td>
+          <td class="number-col">昨收</td>
+          <td class="volume-col">成交量</td>
+          <td class="left source-col">API代號</td>
+        </tr>
+      `;
+    }
+
     function render(data) {
       const byId = new Map(data.map(item => [item.id, item]));
 
@@ -414,6 +452,8 @@
             <td colspan="12">${GROUP_TITLES[group]}</td>
           </tr>
         `;
+
+        html += sectionHeaderRow();
 
         for (const id of ORDER) {
           const item = byId.get(id);
