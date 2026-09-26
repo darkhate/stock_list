@@ -3,268 +3,514 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
-
   <title>市場即時監控</title>
 
   <style>
     :root {
-      color-scheme: dark;
+      --bg: #090d14;
+      --panel: #111827;
+      --panel-2: #171c25;
+      --line: #293241;
+      --text: #e5e7eb;
+      --muted: #8f9aaa;
+      --yellow: #ffd400;
 
-      --tv-widget-background-color: #0f172a;
-      --tv-widget-text-color: #e5e7eb;
-      --tv-widget-font-family: Arial, "Noto Sans TC", sans-serif;
-
-      --tv-widget-positive-color: #22c55e;
-      --tv-widget-negative-color: #ef4444;
+      /* 台灣看盤習慣：紅漲、綠跌 */
+      --up: #ff414d;
+      --down: #00c77b;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      background: #020617;
-      color: #f8fafc;
+      background: var(--bg);
+      color: var(--text);
       font-family: Arial, "Noto Sans TC", sans-serif;
     }
 
-    .container {
-      width: min(96%, 1600px);
-      margin: 24px auto;
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      padding: 14px;
     }
 
-    .header {
+    .topbar {
       display: flex;
-      align-items: flex-end;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 16px;
+      align-items: flex-end;
+      gap: 14px;
+      margin: 0 auto 12px;
+      max-width: 1900px;
       flex-wrap: wrap;
     }
 
     h1 {
       margin: 0;
-      font-size: 28px;
-      line-height: 1.2;
+      font-size: 24px;
     }
 
-    .subtitle {
-      margin: 6px 0 0;
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .contract-tag {
-      padding: 7px 10px;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      color: #cbd5e1;
-      background: #0f172a;
+    .meta {
+      margin-top: 5px;
+      color: var(--muted);
       font-size: 13px;
-      white-space: nowrap;
     }
 
-    .market-box {
-      width: 100%;
-      min-height: 760px;
-      overflow: hidden;
+    .right-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-      border: 1px solid #334155;
+    .pill {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #cbd5e1;
+      font-size: 12px;
+    }
+
+    .status-ok { color: #3ddc97; }
+    .status-bad { color: #ff6b74; }
+
+    .table-wrap {
+      max-width: 1900px;
+      margin: 0 auto;
+      overflow-x: auto;
+      border: 1px solid var(--line);
       border-radius: 12px;
-
-      background: #0f172a;
-
-      box-shadow:
-        0 14px 40px rgba(0, 0, 0, 0.28);
+      background: var(--panel);
     }
 
-    tv-market-data {
-      display: block;
+    table {
       width: 100%;
-      min-height: 760px;
+      border-collapse: collapse;
+      min-width: 1350px;
+      table-layout: fixed;
+    }
+
+    thead th {
+      background: #0f172a;
+      color: #9ca3af;
+      font-weight: 500;
+      font-size: 13px;
+      padding: 12px 10px;
+      text-align: right;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 4;
+    }
+
+    thead th.left { text-align: left; }
+
+    tbody td {
+      padding: 10px 10px;
+      border-bottom: 1px solid #232b38;
+      font-size: 15px;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    tbody td.left { text-align: left; }
+
+    .group-row td {
+      background: #22262e;
+      color: #f3f4f6;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 14px;
+    }
+
+    .row:hover td {
+      background: rgba(255,255,255,.025);
+    }
+
+    .seq {
+      width: 52px;
+      text-align: center !important;
+      color: #cbd5e1;
+    }
+
+    .code {
+      width: 95px;
+      color: #f8fafc;
+    }
+
+    .name {
+      width: 350px;
+      color: var(--yellow);
+    }
+
+    .symbol {
+      color: #8ea0b8;
+      font-size: 12px;
+      margin-left: 6px;
+    }
+
+    .contract {
+      display: block;
+      color: #aab4c3;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .num { font-variant-numeric: tabular-nums; }
+
+    .up { color: var(--up); }
+    .down { color: var(--down); }
+    .flat { color: #d1d5db; }
+
+    .muted { color: var(--muted); }
+
+    .error {
+      color: #ff737c;
+      font-size: 12px;
+    }
+
+    .source {
+      width: 145px;
+      color: #9aa5b5;
+      font-size: 12px;
+    }
+
+    .footer {
+      max-width: 1900px;
+      margin: 10px auto 0;
+      color: #6f7b8d;
+      font-size: 12px;
+      line-height: 1.65;
     }
 
     .loading {
-      padding: 24px;
-      color: #94a3b8;
+      animation: pulse 1.2s ease-in-out infinite;
     }
 
-    .notice {
-      margin-top: 12px;
-      color: #64748b;
-      font-size: 12px;
-      line-height: 1.6;
+    @keyframes pulse {
+      0%,100% { opacity: .45; }
+      50% { opacity: 1; }
     }
 
-    @media (max-width: 720px) {
-
-      .container {
-        width: 100%;
-        margin: 0;
-      }
-
-      .header {
-        padding: 16px;
-        margin-bottom: 0;
-      }
-
-      h1 {
-        font-size: 23px;
-      }
-
-      .market-box {
-        border-left: 0;
-        border-right: 0;
-        border-radius: 0;
-      }
-
-      .notice {
-        padding: 0 16px 16px;
-      }
+    @media (max-width: 760px) {
+      .page { padding: 0; }
+      .topbar { padding: 14px; margin-bottom: 0; }
+      .table-wrap { border-left: 0; border-right: 0; border-radius: 0; }
+      .footer { padding: 0 14px 14px; }
     }
   </style>
 </head>
 
-
 <body>
+  <div class="page">
 
-  <main class="container">
-
-    <header class="header">
-
+    <div class="topbar">
       <div>
-
-        <h1>
-          市場即時監控
-        </h1>
-
-        <p class="subtitle">
-          ETF、貴金屬、期貨與總經指標
-          ｜期貨採目前指定月份合約
-        </p>
-
+        <h1>市場即時監控</h1>
+        <div class="meta">
+          自訂 API 表格｜期貨近月自動換月｜每 30 秒更新
+        </div>
       </div>
 
-
-      <div class="contract-tag">
-        期貨月份基準：2026-09-26
+      <div class="right-meta">
+        <div class="pill">
+          API：<span id="apiStatus" class="muted">尚未連線</span>
+        </div>
+        <div class="pill">
+          更新：<span id="updatedAt">--</span>
+        </div>
       </div>
+    </div>
 
-    </header>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="seq">序號</th>
+            <th class="left code">代碼</th>
+            <th class="left name">名稱 / 目前合約</th>
+            <th>最新價</th>
+            <th>漲跌額</th>
+            <th>漲跌幅</th>
+            <th>開盤</th>
+            <th>最高</th>
+            <th>最低</th>
+            <th>昨收</th>
+            <th>成交量</th>
+            <th class="left source">API代號</th>
+          </tr>
+        </thead>
 
+        <tbody id="marketBody">
+          <tr>
+            <td colspan="12" class="loading muted" style="text-align:center;padding:30px;">
+              正在讀取市場資料……
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
+    <div class="footer">
+      期貨使用 Yahoo Finance 的 <code>=F</code> 通用近月代碼，例如
+      <code>GC=F</code>、<code>CL=F</code>、<code>NQ=F</code>、
+      <code>ES=F</code>、<code>MES=F</code>，因此不需要在 GitHub
+      每季手動把 U / Z / H / M 月份改掉。<br>
+      部分美國交易所行情屬延遲資料；此頁適合市場監控，不應視為券商下單行情。
+      XAGUSD 若 Yahoo 無現貨資料，後端會自動改用 <code>SI=F</code> 白銀近月作備援。
+    </div>
 
-    <section class="market-box">
+  </div>
 
-      <!-- TradingView Market Data Widget -->
+  <script>
+    // ============================================================
+    // 只需要改這一行：
+    // 部署 Cloudflare Worker 後，把 /quotes 網址貼進來。
+    // 例如：
+    // https://market-api.your-name.workers.dev/quotes
+    // ============================================================
+    const API_URL = "https://dawn-butterfly-db3e.baquerodwonik432.workers.dev/quotes";
 
-      <script
-        type="module"
-        src="https://widgets.tradingview-widget.com/w/en/tv-market-data.js">
-      </script>
+    const ORDER = [
+      "QQQ", "VOO", "TMF", "TLT",
+      "XAGUSD", "GCmain",
+      "BTCmain", "CLmain", "NQmain", "ESmain", "MESmain",
+      ".VIX", "USDindex", "US10Y"
+    ];
 
+    const GROUP_TITLES = {
+      ETF: "ETF",
+      METAL: "貴金屬 / 貴金屬期貨",
+      FUT: "期貨",
+      MACRO: "總經"
+    };
 
-      <tv-market-data
-        theme="dark"
-        transparent
+    const GROUP_ORDER = ["ETF", "METAL", "FUT", "MACRO"];
 
-        symbol-sectors='[
+    const apiStatus = document.getElementById("apiStatus");
+    const updatedAt = document.getElementById("updatedAt");
+    const body = document.getElementById("marketBody");
 
-          {
-            "sectionName":"ETF",
+    function clsForChange(value) {
+      if (value > 0) return "up";
+      if (value < 0) return "down";
+      return "flat";
+    }
 
-            "symbols":[
+    function formatNumber(value, digits = 2) {
+      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+        return "—";
+      }
 
-              "NASDAQ:QQQ",
+      const n = Number(value);
 
-              "AMEX:VOO",
+      let decimals = digits;
+      const abs = Math.abs(n);
 
-              "AMEX:TMF",
+      if (abs >= 1000) decimals = 2;
+      else if (abs >= 100) decimals = 2;
+      else if (abs >= 10) decimals = 3;
+      else decimals = 4;
 
-              "NASDAQ:TLT"
+      return n.toLocaleString("zh-TW", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
 
-            ]
-          },
+    function formatSigned(value, digits = 2) {
+      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+        return "—";
+      }
 
+      const n = Number(value);
+      const sign = n > 0 ? "+" : "";
+      return sign + formatNumber(n, digits);
+    }
 
-          {
-            "sectionName":"貴金屬 / 黃金期貨",
+    function formatPercent(value) {
+      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+        return "—";
+      }
 
-            "symbols":[
+      const n = Number(value);
+      const sign = n > 0 ? "+" : "";
 
-              "OANDA:XAGUSD",
+      return sign + n.toLocaleString("zh-TW", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + "%";
+    }
 
-              "COMEX:GCZ2026"
+    function formatVolume(value) {
+      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+        return "—";
+      }
 
-            ]
-          },
+      const n = Number(value);
 
+      if (n >= 100000000) return (n / 100000000).toFixed(2) + "億";
+      if (n >= 10000) return (n / 10000).toFixed(2) + "萬";
 
-          {
-            "sectionName":"期貨",
+      return Math.round(n).toLocaleString("zh-TW");
+    }
 
-            "symbols":[
+    function contractText(item) {
+      if (!item.ok) return "";
 
-              "CME:BTCV2026",
+      if (item.autoFrontMonth) {
+        if (item.contractName) {
+          return `目前近月：${item.contractName}｜自動換月`;
+        }
+        return `目前近月：${item.usedSymbol}｜自動換月`;
+      }
 
-              "NYMEX:CLX2026",
+      if (item.id === "XAGUSD" && item.silverFallbackUsed) {
+        return "XAGUSD 現貨未回傳，已自動改用 SI=F 白銀近月";
+      }
 
-              "CME_MINI:NQZ2026",
+      return "";
+    }
 
-              "CME_MINI:ESZ2026",
+    function render(data) {
+      const byId = new Map(data.map(x => [x.id, x]));
+      let seq = 1;
+      let html = "";
 
-              "CME_MINI:MESZ2026"
+      for (const group of GROUP_ORDER) {
+        html += `
+          <tr class="group-row">
+            <td colspan="12">${GROUP_TITLES[group]}</td>
+          </tr>
+        `;
 
-            ]
-          },
+        for (const id of ORDER) {
+          const item = byId.get(id);
+          if (!item || item.group !== group) continue;
 
-
-          {
-            "sectionName":"總經",
-
-            "symbols":[
-
-              "CBOE:VIX",
-
-              "TVC:DXY",
-
-              "TVC:US10Y"
-
-            ]
+          if (!item.ok) {
+            html += `
+              <tr class="row">
+                <td class="seq">${seq++}</td>
+                <td class="left code">${item.id}</td>
+                <td class="left name">
+                  ${item.name}
+                  <span class="contract error">API 讀取失敗：${escapeHtml(item.error || "未知錯誤")}</span>
+                </td>
+                <td colspan="8" class="muted" style="text-align:center;">—</td>
+                <td class="left source">${escapeHtml(item.requestedSymbol || "")}</td>
+              </tr>
+            `;
+            continue;
           }
 
-        ]'>
+          const cls = clsForChange(item.change);
 
+          html += `
+            <tr class="row">
+              <td class="seq">${seq++}</td>
+              <td class="left code">${item.id}</td>
 
-        <div class="loading">
+              <td class="left name" title="${escapeHtml(item.contractName || item.name)}">
+                ${escapeHtml(item.name)}
+                <span class="contract">${escapeHtml(contractText(item))}</span>
+              </td>
 
-          正在載入市場資料…
+              <td class="num ${cls}">${formatNumber(item.price)}</td>
+              <td class="num ${cls}">${formatSigned(item.change)}</td>
+              <td class="num ${cls}">${formatPercent(item.changePercent)}</td>
+              <td class="num">${formatNumber(item.open)}</td>
+              <td class="num">${formatNumber(item.high)}</td>
+              <td class="num">${formatNumber(item.low)}</td>
+              <td class="num">${formatNumber(item.previousClose)}</td>
+              <td class="num">${formatVolume(item.volume)}</td>
 
-        </div>
+              <td class="left source">
+                ${escapeHtml(item.usedSymbol || "")}
+              </td>
+            </tr>
+          `;
+        }
+      }
 
+      body.innerHTML = html;
+    }
 
-      </tv-market-data>
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-    </section>
+    async function loadMarketData() {
+      if (API_URL.includes("YOUR-WORKER")) {
+        apiStatus.textContent = "請先填入 Worker URL";
+        apiStatus.className = "status-bad";
 
+        body.innerHTML = `
+          <tr>
+            <td colspan="12" style="text-align:center;padding:32px;color:#ff737c;">
+              請先在 index.html 將 API_URL 改成你的 Cloudflare Worker /quotes 網址。
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
+      apiStatus.textContent = "連線中…";
+      apiStatus.className = "muted";
 
-    <p class="notice">
+      try {
+        const res = await fetch(API_URL, {
+          cache: "no-store"
+        });
 
-      注意：
-      部分 CME／COMEX／NYMEX 商品，
-      可能因 TradingView 網站小工具的交易所行情授權限制，
-      顯示 Permission denied。
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
 
-      這種情況不是 HTML 語法錯誤。
+        const payload = await res.json();
 
-    </p>
+        if (!payload.ok || !Array.isArray(payload.data)) {
+          throw new Error(payload.error || "API 格式錯誤");
+        }
 
+        render(payload.data);
 
-  </main>
+        apiStatus.textContent = "正常";
+        apiStatus.className = "status-ok";
 
+        const d = new Date(payload.generatedAt || Date.now());
+
+        updatedAt.textContent = d.toLocaleString("zh-TW", {
+          hour12: false
+        });
+
+      } catch (err) {
+        apiStatus.textContent = "失敗";
+        apiStatus.className = "status-bad";
+
+        body.innerHTML = `
+          <tr>
+            <td colspan="12" style="text-align:center;padding:32px;color:#ff737c;">
+              API 讀取失敗：${escapeHtml(err.message || err)}
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    loadMarketData();
+
+    // 每30秒更新一次。Worker 端有15秒快取，避免過度打 Yahoo。
+    setInterval(loadMarketData, 30000);
+  </script>
 </body>
 </html>
