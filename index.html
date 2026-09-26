@@ -9,15 +9,13 @@
     :root {
       --bg: #090d14;
       --panel: #111827;
-      --panel-2: #171c25;
+      --group: #22262e;
       --line: #293241;
       --text: #e5e7eb;
       --muted: #8f9aaa;
       --yellow: #ffd400;
-
-      /* 台灣看盤習慣：紅漲、綠跌 */
-      --up: #ff414d;
-      --down: #00c77b;
+      --up: #ff414d;     /* 台灣看盤：紅漲 */
+      --down: #00c77b;   /* 台灣看盤：綠跌 */
     }
 
     * { box-sizing: border-box; }
@@ -32,27 +30,27 @@
     .page {
       width: 100%;
       min-height: 100vh;
-      padding: 14px;
+      padding: 10px;
     }
 
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      gap: 14px;
-      margin: 0 auto 12px;
+      gap: 12px;
+      margin: 0 auto 10px;
       max-width: 1900px;
       flex-wrap: wrap;
     }
 
     h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 25px;
     }
 
     .meta {
       margin-top: 5px;
-      color: var(--muted);
+      color: #8fa5c8;
       font-size: 13px;
     }
 
@@ -67,64 +65,66 @@
       border: 1px solid var(--line);
       background: var(--panel);
       border-radius: 999px;
-      padding: 7px 10px;
-      color: #cbd5e1;
+      padding: 7px 11px;
       font-size: 12px;
     }
 
     .status-ok { color: #3ddc97; }
+    .status-warn { color: #fbbf24; }
     .status-bad { color: #ff6b74; }
+    .muted { color: var(--muted); }
 
     .table-wrap {
       max-width: 1900px;
       margin: 0 auto;
       overflow-x: auto;
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 10px;
       background: var(--panel);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1350px;
+      min-width: 1500px;
       table-layout: fixed;
     }
 
     thead th {
       background: #0f172a;
-      color: #9ca3af;
-      font-weight: 500;
+      color: #8fa5c8;
+      font-weight: 600;
       font-size: 13px;
-      padding: 12px 10px;
+      padding: 12px 9px;
       text-align: right;
       border-bottom: 1px solid var(--line);
       position: sticky;
       top: 0;
-      z-index: 4;
+      z-index: 3;
     }
 
     thead th.left { text-align: left; }
 
     tbody td {
-      padding: 10px 10px;
+      padding: 10px 9px;
       border-bottom: 1px solid #232b38;
       font-size: 15px;
       text-align: right;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-variant-numeric: tabular-nums;
     }
 
     tbody td.left { text-align: left; }
 
     .group-row td {
-      background: #22262e;
-      color: #f3f4f6;
+      background: var(--group);
+      color: #f8fafc;
       font-size: 15px;
       font-weight: 700;
       text-align: left;
-      padding: 10px 14px;
+      padding: 10px 8px;
     }
 
     .row:hover td {
@@ -132,9 +132,8 @@
     }
 
     .seq {
-      width: 52px;
+      width: 50px;
       text-align: center !important;
-      color: #cbd5e1;
     }
 
     .code {
@@ -143,14 +142,8 @@
     }
 
     .name {
-      width: 350px;
+      width: 375px;
       color: var(--yellow);
-    }
-
-    .symbol {
-      color: #8ea0b8;
-      font-size: 12px;
-      margin-left: 6px;
     }
 
     .contract {
@@ -158,42 +151,41 @@
       color: #aab4c3;
       font-size: 11px;
       margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .num { font-variant-numeric: tabular-nums; }
+    .price-col { width: 118px; }
+    .change-col { width: 110px; }
+    .percent-col { width: 105px; }
+    .number-col { width: 115px; }
+    .volume-col { width: 125px; }
+    .source-col { width: 110px; }
 
     .up { color: var(--up); }
     .down { color: var(--down); }
     .flat { color: #d1d5db; }
 
-    .muted { color: var(--muted); }
-
-    .error {
-      color: #ff737c;
+    .api-code {
+      color: #9fb8df;
       font-size: 12px;
     }
 
-    .source {
-      width: 145px;
-      color: #9aa5b5;
-      font-size: 12px;
+    .error {
+      color: #ff737c;
+      font-size: 11px;
     }
 
     .footer {
       max-width: 1900px;
-      margin: 10px auto 0;
-      color: #6f7b8d;
+      margin: 9px auto 0;
+      color: #718098;
       font-size: 12px;
       line-height: 1.65;
     }
 
-    .loading {
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%,100% { opacity: .45; }
-      50% { opacity: 1; }
+    code {
+      color: #9fb8df;
     }
 
     @media (max-width: 760px) {
@@ -212,13 +204,13 @@
       <div>
         <h1>市場即時監控</h1>
         <div class="meta">
-          自訂 API 表格｜期貨近月自動換月｜每 30 秒更新
+          全欄位 API 對應｜期貨近月自動換月｜每 30 秒更新
         </div>
       </div>
 
       <div class="right-meta">
         <div class="pill">
-          API：<span id="apiStatus" class="muted">尚未連線</span>
+          API：<span id="apiStatus" class="muted">連線中…</span>
         </div>
         <div class="pill">
           更新：<span id="updatedAt">--</span>
@@ -233,21 +225,21 @@
             <th class="seq">序號</th>
             <th class="left code">代碼</th>
             <th class="left name">名稱 / 目前合約</th>
-            <th>最新價</th>
-            <th>漲跌額</th>
-            <th>漲跌幅</th>
-            <th>開盤</th>
-            <th>最高</th>
-            <th>最低</th>
-            <th>昨收</th>
-            <th>成交量</th>
-            <th class="left source">API代號</th>
+            <th class="price-col">最新價</th>
+            <th class="change-col">漲跌額</th>
+            <th class="percent-col">漲跌幅</th>
+            <th class="number-col">開盤</th>
+            <th class="number-col">最高</th>
+            <th class="number-col">最低</th>
+            <th class="number-col">昨收</th>
+            <th class="volume-col">成交量</th>
+            <th class="left source-col">API代號</th>
           </tr>
         </thead>
 
         <tbody id="marketBody">
           <tr>
-            <td colspan="12" class="loading muted" style="text-align:center;padding:30px;">
+            <td colspan="12" class="muted" style="text-align:center;padding:32px;">
               正在讀取市場資料……
             </td>
           </tr>
@@ -256,29 +248,43 @@
     </div>
 
     <div class="footer">
-      期貨使用 Yahoo Finance 的 <code>=F</code> 通用近月代碼，例如
-      <code>GC=F</code>、<code>CL=F</code>、<code>NQ=F</code>、
-      <code>ES=F</code>、<code>MES=F</code>，因此不需要在 GitHub
-      每季手動把 U / Z / H / M 月份改掉。<br>
-      部分美國交易所行情屬延遲資料；此頁適合市場監控，不應視為券商下單行情。
-      XAGUSD 若 Yahoo 無現貨資料，後端會自動改用 <code>SI=F</code> 白銀近月作備援。
+      API 欄位對應：
+      <code>price</code> = 最新價｜
+      <code>change</code> = 漲跌額｜
+      <code>changePercent</code> = 漲跌幅｜
+      <code>open</code> = 開盤｜
+      <code>high</code> = 最高｜
+      <code>low</code> = 最低｜
+      <code>previousClose</code> = 昨收｜
+      <code>volume</code> = 成交量｜
+      <code>usedSymbol</code> = API代號。
+      <br>
+      若上游沒有某欄位，顯示「—」；VIX、美元指數、10年期殖利率若沒有具意義成交量，不會假造 0。
     </div>
 
   </div>
 
   <script>
-    // ============================================================
-    // 只需要改這一行：
-    // 部署 Cloudflare Worker 後，把 /quotes 網址貼進來。
-    // 例如：
-    // https://market-api.your-name.workers.dev/quotes
-    // ============================================================
-    const API_URL = "https://dawn-butterfly-db3e.baquerodwornik432.workers.dev/quotes";
+    const API_URL =
+      "https://dawn-butterfly-db3e.baquerodwornik432.workers.dev/quotes";
+
+    // 前端欄位 -> Worker JSON 欄位
+    const FIELD_MAP = {
+      price: "price",
+      change: "change",
+      changePercent: "changePercent",
+      open: "open",
+      high: "high",
+      low: "low",
+      previousClose: "previousClose",
+      volume: "volume",
+      usedSymbol: "usedSymbol"
+    };
 
     const ORDER = [
       "QQQ", "VOO", "TMF", "TLT",
-      "XAGUSD", "GCmain",
-      "BTCmain", "CLmain", "NQmain", "ESmain", "MESmain",
+      "XAGUSD",
+      "GCmain", "BTCmain", "CLmain", "NQmain", "ESmain", "MESmain",
       ".VIX", "USDindex", "US10Y"
     ];
 
@@ -295,47 +301,62 @@
     const updatedAt = document.getElementById("updatedAt");
     const body = document.getElementById("marketBody");
 
+    let lastGoodData = null;
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function isFiniteNumber(value) {
+      return value !== null &&
+             value !== undefined &&
+             value !== "" &&
+             Number.isFinite(Number(value));
+    }
+
     function clsForChange(value) {
-      if (value > 0) return "up";
-      if (value < 0) return "down";
+      if (!isFiniteNumber(value)) return "flat";
+
+      const n = Number(value);
+      if (n > 0) return "up";
+      if (n < 0) return "down";
       return "flat";
     }
 
-    function formatNumber(value, digits = 2) {
-      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
-        return "—";
-      }
+    function formatNumber(value) {
+      if (!isFiniteNumber(value)) return "—";
 
       const n = Number(value);
-
-      let decimals = digits;
       const abs = Math.abs(n);
 
-      if (abs >= 1000) decimals = 2;
-      else if (abs >= 100) decimals = 2;
-      else if (abs >= 10) decimals = 3;
-      else decimals = 4;
+      let digits = 4;
+
+      if (abs >= 1000) digits = 2;
+      else if (abs >= 100) digits = 2;
+      else if (abs >= 10) digits = 3;
 
       return n.toLocaleString("zh-TW", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
       });
     }
 
-    function formatSigned(value, digits = 2) {
-      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
-        return "—";
-      }
+    function formatSigned(value) {
+      if (!isFiniteNumber(value)) return "—";
 
       const n = Number(value);
       const sign = n > 0 ? "+" : "";
-      return sign + formatNumber(n, digits);
+
+      return sign + formatNumber(n);
     }
 
     function formatPercent(value) {
-      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
-        return "—";
-      }
+      if (!isFiniteNumber(value)) return "—";
 
       const n = Number(value);
       const sign = n > 0 ? "+" : "";
@@ -347,12 +368,11 @@
     }
 
     function formatVolume(value) {
-      if (value === null || value === undefined || !Number.isFinite(Number(value))) {
-        return "—";
-      }
+      if (!isFiniteNumber(value)) return "—";
 
       const n = Number(value);
 
+      if (n <= 0) return "—";
       if (n >= 100000000) return (n / 100000000).toFixed(2) + "億";
       if (n >= 10000) return (n / 10000).toFixed(2) + "萬";
 
@@ -362,22 +382,29 @@
     function contractText(item) {
       if (!item.ok) return "";
 
+      if (item.id === "XAGUSD" && item.silverFallbackUsed) {
+        return "XAGUSD 現貨未回傳，已自動改用 SI=F 白銀近月";
+      }
+
       if (item.autoFrontMonth) {
         if (item.contractName) {
           return `目前近月：${item.contractName}｜自動換月`;
         }
-        return `目前近月：${item.usedSymbol}｜自動換月`;
-      }
 
-      if (item.id === "XAGUSD" && item.silverFallbackUsed) {
-        return "XAGUSD 現貨未回傳，已自動改用 SI=F 白銀近月";
+        return `目前近月：${item.usedSymbol || item.requestedSymbol || "—"}｜自動換月`;
       }
 
       return "";
     }
 
+    function getField(item, key) {
+      const apiKey = FIELD_MAP[key];
+      return item?.[apiKey];
+    }
+
     function render(data) {
-      const byId = new Map(data.map(x => [x.id, x]));
+      const byId = new Map(data.map(item => [item.id, item]));
+
       let seq = 1;
       let html = "";
 
@@ -390,47 +417,50 @@
 
         for (const id of ORDER) {
           const item = byId.get(id);
+
           if (!item || item.group !== group) continue;
 
-          if (!item.ok) {
-            html += `
-              <tr class="row">
-                <td class="seq">${seq++}</td>
-                <td class="left code">${item.id}</td>
-                <td class="left name">
-                  ${item.name}
-                  <span class="contract error">API 讀取失敗：${escapeHtml(item.error || "未知錯誤")}</span>
-                </td>
-                <td colspan="8" class="muted" style="text-align:center;">—</td>
-                <td class="left source">${escapeHtml(item.requestedSymbol || "")}</td>
-              </tr>
-            `;
-            continue;
-          }
+          const price = getField(item, "price");
+          const change = getField(item, "change");
+          const changePercent = getField(item, "changePercent");
+          const open = getField(item, "open");
+          const high = getField(item, "high");
+          const low = getField(item, "low");
+          const previousClose = getField(item, "previousClose");
+          const volume = getField(item, "volume");
+          const usedSymbol = getField(item, "usedSymbol");
 
-          const cls = clsForChange(item.change);
+          const changeClass = clsForChange(change);
 
           html += `
             <tr class="row">
               <td class="seq">${seq++}</td>
-              <td class="left code">${item.id}</td>
 
-              <td class="left name" title="${escapeHtml(item.contractName || item.name)}">
-                ${escapeHtml(item.name)}
-                <span class="contract">${escapeHtml(contractText(item))}</span>
+              <td class="left code">
+                ${escapeHtml(item.id)}
               </td>
 
-              <td class="num ${cls}">${formatNumber(item.price)}</td>
-              <td class="num ${cls}">${formatSigned(item.change)}</td>
-              <td class="num ${cls}">${formatPercent(item.changePercent)}</td>
-              <td class="num">${formatNumber(item.open)}</td>
-              <td class="num">${formatNumber(item.high)}</td>
-              <td class="num">${formatNumber(item.low)}</td>
-              <td class="num">${formatNumber(item.previousClose)}</td>
-              <td class="num">${formatVolume(item.volume)}</td>
+              <td class="left name">
+                ${escapeHtml(item.name)}
 
-              <td class="left source">
-                ${escapeHtml(item.usedSymbol || "")}
+                ${
+                  item.ok
+                    ? `<span class="contract">${escapeHtml(contractText(item))}</span>`
+                    : `<span class="contract error">API讀取失敗：${escapeHtml(item.error || "未知錯誤")}</span>`
+                }
+              </td>
+
+              <td class="${changeClass}">${formatNumber(price)}</td>
+              <td class="${changeClass}">${formatSigned(change)}</td>
+              <td class="${changeClass}">${formatPercent(changePercent)}</td>
+              <td>${formatNumber(open)}</td>
+              <td>${formatNumber(high)}</td>
+              <td>${formatNumber(low)}</td>
+              <td>${formatNumber(previousClose)}</td>
+              <td>${formatVolume(volume)}</td>
+
+              <td class="left api-code">
+                ${escapeHtml(usedSymbol || item.requestedSymbol || "—")}
               </td>
             </tr>
           `;
@@ -440,67 +470,73 @@
       body.innerHTML = html;
     }
 
-    function escapeHtml(value) {
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function fetchWithRetry(url, retries = 3) {
+      let lastError;
+
+      for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+          const res = await fetch(url, {
+            cache: "no-store"
+          });
+
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+          }
+
+          return await res.json();
+
+        } catch (err) {
+          lastError = err;
+
+          if (attempt < retries) {
+            apiStatus.textContent = `重試中 ${attempt}/${retries - 1}`;
+            apiStatus.className = "status-warn";
+            await sleep(1200 * attempt);
+          }
+        }
+      }
+
+      throw lastError;
     }
 
     async function loadMarketData() {
-      if (API_URL.includes("YOUR-WORKER")) {
-        apiStatus.textContent = "請先填入 Worker URL";
-        apiStatus.className = "status-bad";
-
-        body.innerHTML = `
-          <tr>
-            <td colspan="12" style="text-align:center;padding:32px;color:#ff737c;">
-              請先在 index.html 將 API_URL 改成你的 Cloudflare Worker /quotes 網址。
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
       apiStatus.textContent = "連線中…";
       apiStatus.className = "muted";
 
       try {
-        const res = await fetch(API_URL, {
-          cache: "no-store"
-        });
-
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-
-        const payload = await res.json();
+        const payload = await fetchWithRetry(API_URL, 3);
 
         if (!payload.ok || !Array.isArray(payload.data)) {
-          throw new Error(payload.error || "API 格式錯誤");
+          throw new Error(payload.error || "API格式錯誤");
         }
 
+        lastGoodData = payload.data;
         render(payload.data);
 
         apiStatus.textContent = "正常";
         apiStatus.className = "status-ok";
 
-        const d = new Date(payload.generatedAt || Date.now());
-
-        updatedAt.textContent = d.toLocaleString("zh-TW", {
-          hour12: false
-        });
+        updatedAt.textContent =
+          new Date(payload.generatedAt || Date.now())
+            .toLocaleString("zh-TW", { hour12: false });
 
       } catch (err) {
-        apiStatus.textContent = "失敗";
+        apiStatus.textContent = "暫時失敗";
         apiStatus.className = "status-bad";
+
+        // 已有成功資料時，保留畫面，不要因一次網路錯誤把整張表清空
+        if (lastGoodData) {
+          return;
+        }
 
         body.innerHTML = `
           <tr>
-            <td colspan="12" style="text-align:center;padding:32px;color:#ff737c;">
-              API 讀取失敗：${escapeHtml(err.message || err)}
+            <td colspan="12" style="text-align:center;padding:34px;color:#ff737c;">
+              API讀取失敗：${escapeHtml(err.message || err)}
             </td>
           </tr>
         `;
@@ -508,8 +544,6 @@
     }
 
     loadMarketData();
-
-    // 每30秒更新一次。Worker 端有15秒快取，避免過度打 Yahoo。
     setInterval(loadMarketData, 30000);
   </script>
 </body>
